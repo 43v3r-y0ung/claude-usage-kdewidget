@@ -1,0 +1,13 @@
+# Python bytecode from running the helpers
+__pycache__/
+*.py[cod]
+
+# Packaged builds (kpackagetool6 / zip)
+*.plasmoid
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store

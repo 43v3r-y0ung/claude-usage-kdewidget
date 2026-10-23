@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "david1.aprilio4@gmail.com",
+                "Name": "David"
+            }
+        ],
+        "BugReportUrl": "https://github.com/Davidaprilio/claude-usage-kdewidget/issues",
+        "Category": "System Information",
+        "Description": "Claude subscription usage limits and when they reset",
+        "Icon": "office-chart-ring",
+        "Id": "io.github.davidaprilio.claudeusage",
+        "License": "GPL-2.0-or-later",
+        "Name": "Claude Usage",
+        "Version": "0.1.0",
+        "Website": "https://github.com/Davidaprilio/claude-usage-kdewidget"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
