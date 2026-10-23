@@ -194,7 +194,8 @@ PlasmoidItem {
         loadTokens();
     }
 
-    Plasmoid.icon: "office-chart-ring"
+    // The widget's own icon, shipped in the package (also used by the settings window).
+    Plasmoid.icon: Qt.resolvedUrl("../icons/claude-usage.svg").toString().replace(/^file:\/\//, "")
     Plasmoid.status: hasData && percentOf(panelLimit) >= Plasmoid.configuration.criticalPercent
         ? PlasmaCore.Types.NeedsAttentionStatus : PlasmaCore.Types.ActiveStatus
 

@@ -9,11 +9,11 @@
         "BugReportUrl": "https://github.com/Davidaprilio/claude-usage-kdewidget/issues",
         "Category": "System Information",
         "Description": "Claude subscription usage limits and when they reset",
-        "Icon": "office-chart-ring",
+        "Icon": "/icons/claude-usage.svg",
         "Id": "io.github.davidaprilio.claudeusage",
         "License": "GPL-2.0-or-later",
         "Name": "Claude Usage",
-        "Version": "0.1.0",
+        "Version": "0.1.1",
         "Website": "https://github.com/Davidaprilio/claude-usage-kdewidget"
     },
     "KPackageStructure": "Plasma/Applet",
