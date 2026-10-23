@@ -8,6 +8,13 @@ day, week, month and year.
 > from an undocumented endpoint that Claude Code itself uses, which can change
 > without notice.
 
+<p align="center">
+  <img src="docs/screenshots/session-current.png" width="400" alt="Popup on the Session tab: the current 5-hour session in progress, a strip of the last 12 sessions with the ones that hit the limit in red, and tokens per model">
+  &nbsp;
+  <img src="docs/screenshots/session-limit-hit.png" width="400" alt="Popup on the Session tab showing a past session that hit its limit at 11:32, after 4h 42m, blocked for 17 minutes, with the blocked stretch shaded in the chart">
+</p>
+<p align="center"><sub>The Session tab: the session in progress, and a past session that hit its limit.</sub></p>
+
 ## Features
 
 **In the panel**
