@@ -28,10 +28,14 @@ day, week, month and year.
 **In the popup**
 
 - **Limits** — every limit on your plan (5-hour session, weekly, weekly per
-  model) with a bar, the percentage used and when it resets.
+  model) with a bar, the percentage used and when it resets. Under the 5-hour
+  session bar: the tokens Claude Code on this computer has used in it so far,
+  and their cost at API prices.
 - **Tokens** — tokens per model for a **session, day, week, month or year**,
   with ‹ › to page back through the history:
   - the total, compared with the same point of the previous period;
+  - what the tokens would cost at Claude API prices (≈ $), in total, per model,
+    per bar and per session;
   - the split into input, output, cache write and cache read;
   - a stacked bar chart per hour / day / month (hover a bar for its numbers);
   - one row per model (hover to highlight it in the chart, click for details).
@@ -80,6 +84,7 @@ Right-click the widget → **Configure Claude Usage…**
 | Limit shown in panel: session, weekly, or whichever is most used | Session |
 | Panel shows: chart, percentage used, reset time (time left / clock / both) | all, time left |
 | Refresh every | 5 minutes |
+| Also update live while Claude Code works | off |
 | Warning / critical colour at | 75% / 90% |
 | Claude config directory (if you use `CLAUDE_CONFIG_DIR`) | `~/.claude` |
 | Renew an expired login token | off |
@@ -116,6 +121,32 @@ only from where it stopped last time, so the history outlives the transcripts:
 it reaches back to the first time the widget ran, plus the 30 days that were
 still there then.
 
+The cost is worked out the way Claude Code's `/cost` does it: each response's
+tokens at the [Claude API list prices](https://platform.claude.com/docs/en/about-claude/pricing)
+of its model, with 5-minute and 1-hour cache writes, fast mode, US-only
+inference and web searches priced as such. It is an estimate of what the usage
+would cost on the API, not what a subscription charges, and it runs a few
+percent below `/cost`, because some background requests Claude Code makes are
+not written to its transcripts. Models without a known price are left out of
+the cost.
+
+### Live updates — `watch_activity.py`
+
+Off by default; then the widget only refreshes on its interval. With "Also
+update live while Claude Code works" on, the helper waits (with inotify, so
+without polling) until Claude Code writes a transcript — once per step of a
+response: thinking, a tool call, the answer — or until one of its sessions
+turns busy or idle, then answers and is started again:
+
+- the token numbers in the open popup update after every step;
+- when a response ends, the limits are fetched again, at most once a minute,
+  since the usage endpoint answers 429 when asked too often;
+- the tooltip says how many sessions Claude Code is working in.
+
+Busy and idle come from `~/.claude/sessions/<pid>.json`, which Claude Code keeps
+for each running instance but does not document; if it changes, the token
+numbers still update live and the limits on the interval.
+
 ### Sessions
 
 The 5-hour sessions are dated two ways:
@@ -144,6 +175,7 @@ Both helpers print JSON and can be run on their own:
 python3 -I package/contents/code/fetch_usage.py --force
 python3 -I package/contents/code/token_stats.py query --period week --offset 1
 python3 -I package/contents/code/token_stats.py query --period session --offset 3
+python3 -I package/contents/code/watch_activity.py --timeout 60
 ```
 
 ## Troubleshooting

@@ -12,7 +12,9 @@ Item {
 
     property var entry                // a model, as in token_stats.py
     property real periodTotal: 1
+    // Kept by the list, so a row stays open when new numbers rebuild it.
     property bool expanded: false
+    signal toggled()
     readonly property bool hovered: hover.containsMouse
     readonly property real share: periodTotal > 0 ? entry.total / periodTotal * 100 : 0
 
@@ -31,7 +33,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: row.expanded = !row.expanded
+        onClicked: row.toggled()
     }
 
     ColumnLayout {
@@ -56,6 +58,12 @@ Item {
                 Layout.fillWidth: true
                 text: row.entry.name
                 elide: Text.ElideRight
+            }
+            PlasmaComponents.Label {
+                visible: row.entry.cost != null
+                text: row.entry.cost != null ? Format.money(row.entry.cost) : ""
+                font.features: { "tnum": 1 }
+                opacity: 0.6
             }
             PlasmaComponents.Label {
                 text: Format.compact(row.entry.total)
@@ -98,17 +106,18 @@ Item {
 
             Repeater {
                 model: [
-                    [i18n("Input"), row.entry.input],
-                    [i18n("Output"), row.entry.output],
-                    [i18n("Cache write"), row.entry.cache_write],
-                    [i18n("Cache read"), row.entry.cache_read],
-                    [i18n("Requests"), row.entry.requests],
+                    [i18n("Input"), Format.compact(row.entry.input)],
+                    [i18n("Output"), Format.compact(row.entry.output)],
+                    [i18n("Cache write"), Format.compact(row.entry.cache_write)],
+                    [i18n("Cache read"), Format.compact(row.entry.cache_read)],
+                    [i18n("Requests"), Format.compact(row.entry.requests)],
+                    [i18n("Cost"), row.entry.cost != null ? "≈ " + Format.money(row.entry.cost) : i18n("unknown price")],
                 ]
 
                 PlasmaComponents.Label {
                     required property var modelData
                     Layout.fillWidth: true
-                    text: modelData[0] + "  <b>" + Format.compact(modelData[1]) + "</b>"
+                    text: modelData[0] + "  <b>" + modelData[1] + "</b>"
                     textFormat: Text.StyledText
                     font: Kirigami.Theme.smallFont
                 }

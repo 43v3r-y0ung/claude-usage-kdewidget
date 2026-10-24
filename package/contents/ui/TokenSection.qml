@@ -18,6 +18,8 @@ ColumnLayout {
     readonly property bool loading: !!t && (t.period !== root.tokenPeriod || t.offset !== root.tokenOffset)
     readonly property bool empty: !t || t.total === 0
     property string highlight: ""
+    // Ids of the models whose details are open.
+    property var openModels: ({})
 
     spacing: Kirigami.Units.largeSpacing
 
@@ -149,9 +151,20 @@ ColumnLayout {
         }
         PlasmaComponents.Label {
             Layout.alignment: Qt.AlignBaseline
-            Layout.fillWidth: true
             text: i18n("tokens")
             opacity: 0.7
+        }
+        PlasmaComponents.Label {
+            Layout.alignment: Qt.AlignBaseline
+            Layout.fillWidth: true
+            text: section.t ? "· ≈ " + Format.money(section.t.cost) : ""
+            font.features: { "tnum": 1 }
+            font.weight: Font.DemiBold
+            HoverHandler { id: costHover }
+            QQC2.ToolTip.visible: costHover.hovered
+            QQC2.ToolTip.text: (section.t && !section.t.cost_complete
+                ? i18n("Leaves out models without a known price.") + "\n" : "")
+                + i18n("What these tokens would cost at Claude API prices, as Claude Code's /cost estimates it. A subscription is not billed per token, and a few background requests Claude Code makes are not in its transcripts, so this runs a little lower than /cost.")
         }
         PlasmaComponents.Label {
             Layout.alignment: Qt.AlignBaseline
@@ -224,6 +237,15 @@ ColumnLayout {
                 Layout.fillWidth: true
                 entry: modelData
                 periodTotal: section.t.total
+                expanded: !!section.openModels[modelData.id]
+                onToggled: {
+                    const open = Object.assign({}, section.openModels);
+                    if (open[modelData.id])
+                        delete open[modelData.id];
+                    else
+                        open[modelData.id] = true;
+                    section.openModels = open;
+                }
                 onHoveredChanged: {
                     if (hovered)
                         section.highlight = modelData.id;

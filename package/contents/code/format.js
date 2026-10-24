@@ -42,6 +42,13 @@ function compact(n) {
     return String(Math.round(n));
 }
 
+// $0.42, $8.21, $463, $1,270: US dollars whatever the locale, as Claude Code shows them.
+function money(usd) {
+    if (usd > 0 && usd < 0.005)
+        return "<$0.01";
+    return "$" + Number(usd).toLocaleString(Qt.locale("en_US"), "f", usd >= 100 ? 0 : 2);
+}
+
 // The panel text: percent used and/or the reset time, in one of three styles
 // (0 time left, 1 clock time, 2 both).
 function panelText(percent, resetsAt, nowMs, showPercent, showReset, style) {

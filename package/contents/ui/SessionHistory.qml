@@ -94,6 +94,7 @@ ColumnLayout {
                     const s = history.t.strip[history.hovered];
                     return Qt.locale().toString(new Date(s.start * 1000), "ddd d MMM") + ", " + history.hm(s.start)
                         + "–" + history.hm(s.end) + " · " + i18n("%1 tokens", Format.compact(s.total))
+                        + (s.cost ? " · ≈ " + Format.money(s.cost) : "")
                         + (s.hit ? " · " + i18n("limit reached") : "");
                 }
                 const hits = history.t.strip.filter(s => s.hit).length;

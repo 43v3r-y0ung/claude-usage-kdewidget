@@ -218,7 +218,8 @@ Item {
                     opacity: 0.7
                 }
                 PlasmaComponents.Label {
-                    text: tip.bucket ? i18n("%1 tokens", Format.compact(tip.bucket.total)) : ""
+                    text: tip.bucket ? i18n("%1 tokens", Format.compact(tip.bucket.total))
+                        + (tip.bucket.cost ? " · ≈ " + Format.money(tip.bucket.cost) : "") : ""
                     font.weight: Font.DemiBold
                 }
                 Repeater {

@@ -16,6 +16,7 @@ KCM.SimpleKCM {
     // At least one element stays on, or the widget would vanish from the panel.
     readonly property int shownCount: showChart.checked + showPercent.checked + showResetTime.checked
     property alias cfg_refreshMinutes: refreshMinutes.value
+    property alias cfg_liveUpdates: liveUpdates.checked
     property alias cfg_warningPercent: warningPercent.value
     property alias cfg_criticalPercent: criticalPercent.value
     property alias cfg_configDir: configDir.text
@@ -86,6 +87,17 @@ KCM.SimpleKCM {
             to: 60
             textFromValue: (value) => i18np("%1 minute", "%1 minutes", value)
             valueFromText: (text) => parseInt(text)
+        }
+        QQC2.CheckBox {
+            id: liveUpdates
+            text: i18n("Also update live while Claude Code works")
+        }
+        QQC2.Label {
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 22
+            wrapMode: Text.Wrap
+            font: Kirigami.Theme.smallFont
+            opacity: 0.7
+            text: i18n("Watches Claude Code's files on this computer: token counts update after every step of a response, and the limits are fetched again when a response ends (at most once a minute).")
         }
         QQC2.SpinBox {
             id: warningPercent

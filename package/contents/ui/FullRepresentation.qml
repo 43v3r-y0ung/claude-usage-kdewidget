@@ -113,10 +113,27 @@ PlasmaExtras.Representation {
                         percent: limitItem.percent
                         barColor: root.colorFor(limitItem.percent)
                     }
-                    PlasmaComponents.Label {
-                        text: root.resetText(limitItem.modelData)
-                        font: Kirigami.Theme.smallFont
-                        opacity: 0.7
+                    RowLayout {
+                        PlasmaComponents.Label {
+                            Layout.fillWidth: true
+                            text: root.resetText(limitItem.modelData)
+                            font: Kirigami.Theme.smallFont
+                            opacity: 0.7
+                            elide: Text.ElideRight
+                        }
+                        // What this computer's Claude Code used in the session so far.
+                        PlasmaComponents.Label {
+                            readonly property var used: root.tokens && root.tokens.current_session
+                            visible: limitItem.modelData.kind === "session" && !!used && limitItem.percent > 0
+                            text: used ? i18n("%1 tokens · ≈ %2", Format.compact(used.total), Format.money(used.cost)) : ""
+                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                            font.features: { "tnum": 1 }
+                            opacity: 0.7
+
+                            HoverHandler { id: sessionUsedHover }
+                            QQC2.ToolTip.visible: sessionUsedHover.hovered
+                            QQC2.ToolTip.text: i18n("Used by Claude Code on this computer in this session. The cost is an estimate at Claude API prices.")
+                        }
                     }
                 }
             }

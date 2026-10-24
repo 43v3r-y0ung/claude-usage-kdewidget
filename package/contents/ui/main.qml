@@ -44,9 +44,9 @@ PlasmoidItem {
     function _quote(s) {
         return "'" + s.replace(/'/g, "'\\''") + "'";
     }
-    function refresh(force) {
+    function refresh(force, maxAge) {
         let cmd = "/usr/bin/python3 -I " + _quote(_script)
-            + " --max-age " + Math.max(30, Plasmoid.configuration.refreshMinutes * 60 - 20);
+            + " --max-age " + (maxAge || Math.max(30, Plasmoid.configuration.refreshMinutes * 60 - 20));
         if (force)
             cmd += " --force";
         if (Plasmoid.configuration.allowTokenRefresh)
@@ -124,6 +124,74 @@ PlasmoidItem {
         }
     }
 
+    // Live updates: code/watch_activity.py answers when Claude Code writes a
+    // transcript (once per step of a response) or a session turns busy or idle.
+    readonly property bool liveUpdates: Plasmoid.configuration.liveUpdates
+    readonly property int liveFetchSeconds: 60
+    property var activeSessions: []
+    property var _busy: null
+    property int _watchTag: 0
+    readonly property string _watchScript: decodeURIComponent(Qt.resolvedUrl("../code/watch_activity.py").toString().replace(/^file:\/\//, ""))
+    function watch() {
+        let cmd = "/usr/bin/python3 -I " + _quote(_watchScript) + " --tag " + (++_watchTag);
+        if (_busy !== null)
+            cmd += " --busy " + _quote(_busy.join(","));
+        if (Plasmoid.configuration.configDir)
+            cmd += " --config-dir " + _quote(Plasmoid.configuration.configDir);
+        watchRunner.connectSource(cmd);
+    }
+    function stopWatching() {
+        ++_watchTag;  // a watcher still running is ignored when it answers
+        watchRetry.stop();
+        liveFetch.stop();
+        _busy = null;
+        activeSessions = [];
+    }
+
+    P5Support.DataSource {
+        id: watchRunner
+        engine: "executable"
+        connectedSources: []
+        onNewData: (sourceName, data) => {
+            disconnectSource(sourceName);
+            let answer;
+            try {
+                answer = JSON.parse(data.stdout);
+            } catch (e) {
+                answer = { ok: false, error: data.stderr || String(e) };
+            }
+            if (!root.liveUpdates || String(answer.tag) !== String(root._watchTag))
+                return;
+            if (!answer.ok) {
+                console.warn("claudeusage: activity watcher failed:", answer.error);
+                watchRetry.start();
+                return;
+            }
+            const before = root._busy;
+            root.activeSessions = answer.sessions;
+            root._busy = answer.busy;
+            if (answer.reason === "transcripts" && root.expanded)
+                root.loadTokens();
+            // A response ended, so its usage now counts toward the limits.
+            if (before && before.some(id => answer.busy.indexOf(id) < 0) && !liveFetch.running) {
+                const age = root.usage && root.usage.fetched_at ? (Date.now() - Date.parse(root.usage.fetched_at)) / 1000 : Infinity;
+                liveFetch.interval = Math.max(0, root.liveFetchSeconds - age) * 1000 + 1000;
+                liveFetch.start();
+            }
+            root.watch();
+        }
+    }
+    // Waits out the minimum age of a fetch, so the end of every response is fetched.
+    Timer {
+        id: liveFetch
+        onTriggered: root.refresh(false, root.liveFetchSeconds)
+    }
+    Timer {
+        id: watchRetry
+        interval: 60000
+        onTriggered: if (root.liveUpdates) root.watch()
+    }
+
     onExpandedChanged: () => {
         if (root.expanded) {
             tokenOffset = 0;
@@ -185,13 +253,24 @@ PlasmoidItem {
         function onConfigDirChanged() {
             root.refresh(true);
             root.loadTokens();
+            if (root.liveUpdates) {
+                root.stopWatching();
+                root.watch();
+            }
         }
         function onAllowTokenRefreshChanged() { root.refresh(true); }
+        function onLiveUpdatesChanged() {
+            root.stopWatching();
+            if (root.liveUpdates)
+                root.watch();
+        }
     }
 
     Component.onCompleted: {
         refresh(false);
         loadTokens();
+        if (liveUpdates)
+            watch();
     }
 
     // The widget's own icon, shipped in the package (also used by the settings window).
@@ -204,6 +283,9 @@ PlasmoidItem {
         if (!hasData)
             return usage && usage.error ? usage.error : i18n("Loading…");
         let lines = limits.map(l => i18n("%1: %2% · %3", l.label, Math.round(percentOf(l)), resetText(l)));
+        const working = activeSessions.filter(s => s.busy).length;
+        if (working > 0)
+            lines.push(i18np("Claude Code is working in 1 session", "Claude Code is working in %1 sessions", working));
         if (usage.error)
             lines.push(usage.error);
         return lines.join("\n");
