@@ -6,15 +6,15 @@
                 "Name": "David"
             }
         ],
-        "BugReportUrl": "https://github.com/Davidaprilio/claude-usage-kdewidget/issues",
+        "BugReportUrl": "https://github.com/43v3r-y0ung/claude-usage-kdewidget/issues",
         "Category": "System Information",
         "Description": "Claude subscription usage limits and when they reset",
         "Icon": "/icons/claude-usage.svg",
-        "Id": "io.github.davidaprilio.claudeusage",
+        "Id": "io.github.43v3r-y0ung.claudeusage",
         "License": "GPL-2.0-or-later",
         "Name": "Claude Usage",
         "Version": "0.1.1",
-        "Website": "https://github.com/Davidaprilio/claude-usage-kdewidget"
+        "Website": "https://github.com/43v3r-y0ung/claude-usage-kdewidget"
     },
     "KPackageStructure": "Plasma/Applet",
     "X-Plasma-API-Minimum-Version": "6.0"

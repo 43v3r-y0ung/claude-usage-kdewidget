@@ -58,7 +58,7 @@ The popup sizes itself to the tab you are on and remembers the tab you used last
 ## Install
 
 ```sh
-git clone https://github.com/Davidaprilio/claude-usage-kdewidget.git
+git clone https://github.com/43v3r-y0ung/claude-usage-kdewidget.git
 cd claude-usage-kdewidget
 kpackagetool6 -t Plasma/Applet -i package
 ```
@@ -69,7 +69,7 @@ Update after pulling changes, or remove:
 
 ```sh
 kpackagetool6 -t Plasma/Applet -u package
-kpackagetool6 -t Plasma/Applet -r io.github.davidaprilio.claudeusage
+kpackagetool6 -t Plasma/Applet -r io.github.43v3r-y0ung.claudeusage
 ```
 
 Plasma keeps the old version loaded until it restarts:
