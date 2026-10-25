@@ -239,6 +239,9 @@ PlasmoidItem {
         if (root.expanded) {
             tokenOffset = 0;
             loadTokens();
+        } else {
+            // After Plasma has put back the status it had before the popup opened.
+            Qt.callLater(root.applyStatus);
         }
     }
 
@@ -310,6 +313,7 @@ PlasmoidItem {
     }
 
     Component.onCompleted: {
+        applyStatus();
         refresh(false);
         loadTokens();
         if (liveUpdates)
@@ -318,9 +322,17 @@ PlasmoidItem {
 
     // The widget's own icon, shipped in the package (also used by the settings window).
     Plasmoid.icon: Qt.resolvedUrl("../icons/claude-usage.svg").toString().replace(/^file:\/\//, "")
-    Plasmoid.status: hidden ? PlasmaCore.Types.HiddenStatus
+    // Set by hand rather than bound: Plasma assigns Plasmoid.status itself while the
+    // popup is open, which would break a binding and leave the widget shown when
+    // Claude Code quits after the popup was used once.
+    readonly property int wantedStatus: hidden ? PlasmaCore.Types.HiddenStatus
         : hasData && Math.max(percentOf(panelLimit), percentOf(weeklyLimit)) >= Plasmoid.configuration.criticalPercent
         ? PlasmaCore.Types.NeedsAttentionStatus : PlasmaCore.Types.ActiveStatus
+    function applyStatus() {
+        if (!expanded)
+            Plasmoid.status = wantedStatus;
+    }
+    onWantedStatusChanged: applyStatus()
 
     toolTipMainText: i18n("Claude usage")
     toolTipSubText: {
