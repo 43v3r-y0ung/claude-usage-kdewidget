@@ -19,7 +19,8 @@ function secondsUntil(isoString, nowMs) {
     return (Date.parse(isoString) - nowMs) / 1000;
 }
 
-// The limit the panel shows: 0 session, 1 weekly (all models), 2 most used.
+// The limit the panel shows: 0 session, 1 weekly (all models), 2 most used,
+// 3 and 4 both as nested rings, weekly outside or inside (the text then follows the session).
 // Falls back to the first limit when the plan has no such window.
 function pickLimit(limits, mode) {
     if (!limits || limits.length === 0)

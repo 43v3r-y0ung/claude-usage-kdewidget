@@ -79,6 +79,19 @@ class Inotify:
         return events
 
 
+def alive(pid, proc_start):
+    """Whether `pid` is still the process that wrote the session file (not a reused pid)."""
+    try:
+        stat = Path(f"/proc/{pid}/stat").read_text()
+    except OSError:
+        return False
+    if proc_start is None:
+        return True
+    # Field 22 is the start time; the command name before it may contain spaces.
+    fields = stat[stat.rfind(")") + 2:].split()
+    return len(fields) > 19 and fields[19] == str(proc_start)
+
+
 def sessions(sessions_dir):
     """Running Claude Code instances, from the files they keep in <config dir>/sessions."""
     found = []
@@ -92,7 +105,7 @@ def sessions(sessions_dir):
             pid = int(entry["pid"])
         except (OSError, ValueError, KeyError, TypeError):
             continue
-        if not os.path.exists(f"/proc/{pid}"):  # left behind by a crash
+        if not alive(pid, entry.get("procStart")):  # left behind by a crash
             continue
         found.append({"id": str(entry.get("sessionId") or pid), "name": entry.get("name") or "",
                       "cwd": entry.get("cwd") or "", "busy": entry.get("status") == "busy"})
@@ -160,13 +173,17 @@ def main():
                         help="comma-separated ids of the sessions the widget last saw busy; a difference answers at once")
     parser.add_argument("--timeout", type=float, default=600, help="answer after this long even if nothing happened (s)")
     parser.add_argument("--tag", default="", help="echoed back, to match answers to requests")
+    parser.add_argument("--list", action="store_true", help="print the running sessions at once instead of waiting")
     args = parser.parse_args()
 
     config_dir = Path(args.config_dir or os.environ.get("CLAUDE_CONFIG_DIR") or Path.home() / ".claude").expanduser()
     known = sorted(filter(None, args.busy.split(","))) if args.busy is not None else None
     out = {"tag": args.tag, "ok": True, "error": None}
     try:
-        reason, found = wait(config_dir, known, args.timeout)
+        if args.list:
+            reason, found = "list", sessions(config_dir / "sessions")
+        else:
+            reason, found = wait(config_dir, known, args.timeout)
         out.update(reason=reason, sessions=found, busy=busy_ids(found))
     except OSError as e:
         out.update(ok=False, error=str(e.strerror or e))

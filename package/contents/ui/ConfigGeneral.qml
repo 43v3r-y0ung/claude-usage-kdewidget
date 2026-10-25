@@ -17,6 +17,7 @@ KCM.SimpleKCM {
     readonly property int shownCount: showChart.checked + showPercent.checked + showResetTime.checked
     property alias cfg_refreshMinutes: refreshMinutes.value
     property alias cfg_liveUpdates: liveUpdates.checked
+    property alias cfg_hideWhenNotRunning: hideWhenNotRunning.checked
     property alias cfg_warningPercent: warningPercent.value
     property alias cfg_criticalPercent: criticalPercent.value
     property alias cfg_configDir: configDir.text
@@ -26,7 +27,8 @@ KCM.SimpleKCM {
         QQC2.ComboBox {
             id: panelLimit
             Kirigami.FormData.label: i18n("Limit shown in panel:")
-            model: [i18n("Session (5 hours)"), i18n("Weekly (all models)"), i18n("Whichever is most used")]
+            model: [i18n("Session (5 hours)"), i18n("Weekly (all models)"), i18n("Whichever is most used"),
+                i18n("Nested rings: weekly outside, session inside"), i18n("Nested rings: session outside, weekly inside")]
         }
 
         QQC2.CheckBox {
@@ -64,9 +66,12 @@ KCM.SimpleKCM {
 
                 UsageRing {
                     visible: showChart.checked || shownCount === 0
-                    Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
-                    Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
-                    percent: parent.samplePercent
+                    nested: panelLimit.currentIndex >= 3
+                    readonly property bool sessionOutside: panelLimit.currentIndex === 4
+                    Layout.preferredWidth: nested ? Kirigami.Units.iconSizes.medium : Kirigami.Units.iconSizes.smallMedium
+                    Layout.preferredHeight: Layout.preferredWidth
+                    percent: nested && !sessionOutside ? 12 : parent.samplePercent
+                    innerPercent: sessionOutside ? 12 : parent.samplePercent
                 }
                 QQC2.Label {
                     readonly property string sample: Format.panelText(parent.samplePercent, parent.sampleReset, Date.now(),
@@ -76,6 +81,11 @@ KCM.SimpleKCM {
                     font.features: { "tnum": 1 }
                 }
             }
+        }
+
+        QQC2.CheckBox {
+            id: hideWhenNotRunning
+            text: i18n("Hide while Claude Code is not running")
         }
 
         Item { Kirigami.FormData.isSection: true }

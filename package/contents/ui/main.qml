@@ -18,6 +18,11 @@ PlasmoidItem {
     readonly property var limits: usage ? usage.limits : []
     readonly property var panelLimit: Format.pickLimit(limits, Plasmoid.configuration.panelLimit)
     readonly property bool hasData: limits.length > 0
+    // Modes 3 and 4 show the weekly and session limits as nested rings:
+    // 3 has the weekly one outside, 4 the session one.
+    readonly property bool nestedRings: Plasmoid.configuration.panelLimit >= 3
+    readonly property bool sessionOutside: Plasmoid.configuration.panelLimit === 4
+    readonly property var weeklyLimit: nestedRings ? Format.pickLimit(limits, 1) : null
 
     // Limits whose reset time has passed are shown as empty until the next fetch.
     function percentOf(limit) {
@@ -192,6 +197,44 @@ PlasmoidItem {
         onTriggered: if (root.liveUpdates) root.watch()
     }
 
+    // Whether any Claude Code instance is running, polled with watch_activity.py --list;
+    // while none is (and the option is on) the widget takes no room in the panel.
+    property bool claudeRunning: false
+    readonly property bool editMode: Plasmoid.containment && Plasmoid.containment.corona
+        ? Plasmoid.containment.corona.editMode : false
+    readonly property bool hidden: Plasmoid.configuration.hideWhenNotRunning && !claudeRunning && !expanded && !editMode
+    function checkRunning() {
+        let cmd = "/usr/bin/python3 -I " + _quote(_watchScript) + " --list";
+        if (Plasmoid.configuration.configDir)
+            cmd += " --config-dir " + _quote(Plasmoid.configuration.configDir);
+        runningRunner.connectSource(cmd);
+    }
+
+    P5Support.DataSource {
+        id: runningRunner
+        engine: "executable"
+        connectedSources: []
+        onNewData: (sourceName, data) => {
+            disconnectSource(sourceName);
+            if (!data.stdout)
+                return;  // killed, e.g. while the shell quits; the next check answers
+            try {
+                const answer = JSON.parse(data.stdout);
+                if (answer.ok)
+                    root.claudeRunning = answer.sessions.length > 0;
+            } catch (e) {
+                console.warn("claudeusage: session check failed:", data.stderr || e);
+            }
+        }
+    }
+    Timer {
+        interval: 5000
+        running: Plasmoid.configuration.hideWhenNotRunning
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: root.checkRunning()
+    }
+
     onExpandedChanged: () => {
         if (root.expanded) {
             tokenOffset = 0;
@@ -275,7 +318,8 @@ PlasmoidItem {
 
     // The widget's own icon, shipped in the package (also used by the settings window).
     Plasmoid.icon: Qt.resolvedUrl("../icons/claude-usage.svg").toString().replace(/^file:\/\//, "")
-    Plasmoid.status: hasData && percentOf(panelLimit) >= Plasmoid.configuration.criticalPercent
+    Plasmoid.status: hidden ? PlasmaCore.Types.HiddenStatus
+        : hasData && Math.max(percentOf(panelLimit), percentOf(weeklyLimit)) >= Plasmoid.configuration.criticalPercent
         ? PlasmaCore.Types.NeedsAttentionStatus : PlasmaCore.Types.ActiveStatus
 
     toolTipMainText: i18n("Claude usage")

@@ -22,8 +22,13 @@ MouseArea {
         return Format.panelText(percent, limit.resets_at, root.now, cfg.showPercent, cfg.showResetTime, cfg.resetTimeStyle);
     }
 
-    Layout.minimumWidth: vertical ? -1 : row.implicitWidth
-    Layout.minimumHeight: vertical ? row.implicitHeight : -1
+    visible: !root.hidden
+    Layout.minimumWidth: root.hidden ? 0 : vertical ? -1 : row.implicitWidth
+    Layout.minimumHeight: root.hidden ? 0 : vertical ? row.implicitHeight : -1
+    Layout.preferredWidth: root.hidden ? 0 : -1
+    Layout.preferredHeight: root.hidden ? 0 : -1
+    Layout.maximumWidth: root.hidden ? 0 : Infinity
+    Layout.maximumHeight: root.hidden ? 0 : Infinity
     hoverEnabled: true
     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
     onClicked: mouse => {
@@ -42,12 +47,17 @@ MouseArea {
 
         UsageRing {
             visible: compact.showChart
-            readonly property int size: Math.round((compact.vertical ? compact.width : compact.height) * 0.6)
+            // Two rings need more room to stay readable.
+            readonly property int size: Math.round((compact.vertical ? compact.width : compact.height) * (nested ? 0.8 : 0.6))
             Layout.preferredWidth: size
             Layout.preferredHeight: size
             Layout.alignment: Qt.AlignCenter
-            percent: compact.percent
-            color: root.colorFor(compact.percent)
+            nested: root.nestedRings
+            readonly property real weeklyPercent: root.percentOf(root.weeklyLimit)
+            percent: nested && !root.sessionOutside ? weeklyPercent : compact.percent
+            color: root.colorFor(percent)
+            innerPercent: root.sessionOutside ? weeklyPercent : compact.percent
+            innerColor: root.colorFor(innerPercent)
             opacity: root.usage && root.usage.stale ? 0.5 : 1
         }
         PlasmaComponents.Label {
