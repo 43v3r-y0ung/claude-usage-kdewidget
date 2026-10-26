@@ -15,6 +15,14 @@ PlasmoidItem {
     // Ticks every 30 s so the countdowns move without asking the server.
     property double now: Date.now()
 
+    // Templates for Format.duration. "%1" and "%2" are passed through untouched for format.js to fill in.
+    readonly property var durationUnits: ({
+        now: i18nc("@item:intext a duration under a minute", "now"),
+        m: i18nc("@item:intext short duration in minutes", "%1m", "%1"),
+        hm: i18nc("@item:intext short duration in hours and minutes", "%1h %2m", "%1", "%2"),
+        dh: i18nc("@item:intext short duration in days and hours", "%1d %2h", "%1", "%2")
+    })
+
     readonly property var limits: usage ? usage.limits : []
     readonly property var panelLimit: Format.pickLimit(limits, Plasmoid.configuration.panelLimit)
     readonly property bool hasData: limits.length > 0
@@ -42,7 +50,42 @@ PlasmoidItem {
         if (s <= 0)
             return i18n("Reset, refreshing…");
         const at = Qt.locale().toString(new Date(limit.resets_at), s < 86400 ? "HH:mm" : "ddd HH:mm");
-        return i18n("Resets in %1 (%2)", Format.duration(s), at);
+        return i18n("Resets in %1 (%2)", Format.duration(s, root.durationUnits), at);
+    }
+
+    // fetch_usage.py writes its labels and errors in English; these are the translated ones.
+    function limitLabel(limit) {
+        switch (limit.kind) {
+        case "session": return i18n("Session (5h)");
+        case "weekly_all": return i18n("Weekly · all models");
+        case "weekly_scoped": {
+            const model = limit.label.replace(/^Weekly · /, "");
+            return model === "scoped" ? i18n("Weekly · scoped") : i18n("Weekly · %1", model);
+        }
+        default: return limit.label;
+        }
+    }
+    function errorText(answer) {
+        const code = answer.error_code || "";
+        switch (code) {
+        case "no_login": return i18n("No Claude Code login in %1; run `claude` and /login", answer.error_arg);
+        case "expired": return i18n("Token expired; open Claude Code to renew it");
+        case "renew_failed": return i18n("Token renewal failed; open Claude Code to renew it");
+        case "rejected": return i18n("Token rejected; open Claude Code to renew it");
+        case "network": return i18n("Network error: %1", answer.error_arg);
+        case "bad_response": return i18n("Unexpected answer from the server");
+        case "http_429": return i18n("Rate limited; waiting before asking again");
+        }
+        if (code.startsWith("http_") && answer.error_arg)
+            return i18n("HTTP %1 from %2", code.slice(5), answer.error_arg);
+        return answer.error;
+    }
+    function localized(answer) {
+        if (answer.limits)
+            answer.limits = answer.limits.map(l => Object.assign({}, l, { label: limitLabel(l) }));
+        if (answer.error)
+            answer.error = errorText(answer);
+        return answer;
     }
 
     readonly property string _script: decodeURIComponent(Qt.resolvedUrl("../code/fetch_usage.py").toString().replace(/^file:\/\//, ""))
@@ -253,7 +296,7 @@ PlasmoidItem {
             disconnectSource(sourceName);
             root.loading = false;
             try {
-                root.usage = JSON.parse(data.stdout);
+                root.usage = root.localized(JSON.parse(data.stdout));
             } catch (e) {
                 console.warn("claudeusage: helper failed:", data.stderr || e);
                 root.usage = Object.assign({}, root.usage || {}, {

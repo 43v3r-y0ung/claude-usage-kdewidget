@@ -172,7 +172,7 @@ PlasmaExtras.Representation {
                     if (!root.usage || !root.usage.fetched_at)
                         return "";
                     const age = (root.now - Date.parse(root.usage.fetched_at)) / 1000;
-                    const updated = age < 60 ? i18n("Updated just now") : i18n("Updated %1 ago", Format.duration(age));
+                    const updated = age < 60 ? i18n("Updated just now") : i18n("Updated %1 ago", Format.duration(age, root.durationUnits));
                     return root.usage.error ? updated + " — " + root.usage.error : updated;
                 }
             }

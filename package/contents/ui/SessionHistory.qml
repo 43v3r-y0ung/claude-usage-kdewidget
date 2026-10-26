@@ -173,14 +173,14 @@ ColumnLayout {
                             return "";
                         let parts = [];
                         if (i.hit_at) {
-                            parts.push(i18n("after %1 of the session", Format.duration(i.hit_at - t.start)));
-                            parts.push(i.active ? i18n("resets in %1", Format.duration(t.end - root.now / 1000))
-                                                : i18n("blocked for %1", Format.duration(t.end - i.hit_at)));
+                            parts.push(i18n("after %1 of the session", Format.duration(i.hit_at - t.start, root.durationUnits)));
+                            parts.push(i.active ? i18n("resets in %1", Format.duration(t.end - root.now / 1000, root.durationUnits))
+                                                : i18n("blocked for %1", Format.duration(t.end - i.hit_at, root.durationUnits)));
                         } else if (i.active) {
                             const live = root.limits.find(l => l.kind === "session");
                             if (live)
                                 parts.push(i18n("%1% used", Math.round(root.percentOf(live))));
-                            parts.push(i18n("resets in %1", Format.duration(t.end - root.now / 1000)));
+                            parts.push(i18n("resets in %1", Format.duration(t.end - root.now / 1000, root.durationUnits)));
                         } else if (i.peak_percent !== null && i.peak_percent !== undefined) {
                             parts.push(i18n("peaked at %1% of the limit", Math.round(i.peak_percent)));
                         } else {

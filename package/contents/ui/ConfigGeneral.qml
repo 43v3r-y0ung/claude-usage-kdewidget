@@ -23,6 +23,14 @@ KCM.SimpleKCM {
     property alias cfg_configDir: configDir.text
     property alias cfg_allowTokenRefresh: allowTokenRefresh.checked
 
+    // The same templates as root.durationUnits in main.qml, for the preview.
+    readonly property var durationUnits: ({
+        now: i18nc("@item:intext a duration under a minute", "now"),
+        m: i18nc("@item:intext short duration in minutes", "%1m", "%1"),
+        hm: i18nc("@item:intext short duration in hours and minutes", "%1h %2m", "%1", "%2"),
+        dh: i18nc("@item:intext short duration in days and hours", "%1d %2h", "%1", "%2")
+    })
+
     Kirigami.FormLayout {
         QQC2.ComboBox {
             id: panelLimit
@@ -75,7 +83,7 @@ KCM.SimpleKCM {
                 }
                 QQC2.Label {
                     readonly property string sample: Format.panelText(parent.samplePercent, parent.sampleReset, Date.now(),
-                        showPercent.checked, showResetTime.checked, resetTimeStyle.currentIndex)
+                        showPercent.checked, showResetTime.checked, resetTimeStyle.currentIndex, durationUnits)
                     visible: sample.length > 0
                     text: sample
                     font.features: { "tnum": 1 }

@@ -39,10 +39,11 @@ FLAT = {"five_hour": "session", "seven_day": "weekly_all", "seven_day_opus": "Op
 
 
 class UsageError(Exception):
-    def __init__(self, code, message, retry_after=None):
+    def __init__(self, code, message, retry_after=None, arg=None):
         super().__init__(message)
         self.code = code
         self.retry_after = retry_after
+        self.arg = arg  # the variable part of the message, for the widget's translation of it
 
 
 def now():
@@ -92,9 +93,10 @@ def request_json(url, headers, body=None):
             retry = float(retry) if retry else None
         except ValueError:
             retry = None
-        raise UsageError(f"http_{e.code}", f"HTTP {e.code} from {url.split('/')[2]}", retry) from None
+        raise UsageError(f"http_{e.code}", f"HTTP {e.code} from {url.split('/')[2]}", retry, url.split('/')[2]) from None
     except (urllib.error.URLError, TimeoutError, OSError) as e:
-        raise UsageError("network", f"Network error: {getattr(e, 'reason', e)}") from None
+        reason = getattr(e, "reason", e)
+        raise UsageError("network", f"Network error: {reason}", arg=str(reason)) from None
     except ValueError:
         raise UsageError("bad_response", "The server did not answer with JSON") from None
 
@@ -102,7 +104,7 @@ def request_json(url, headers, body=None):
 def load_login(creds_path):
     creds = read_json(creds_path)
     if not isinstance(creds, dict) or not isinstance(creds.get("claudeAiOauth"), dict):
-        raise UsageError("no_login", f"No Claude Code login in {creds_path}; run `claude` and /login")
+        raise UsageError("no_login", f"No Claude Code login in {creds_path}; run `claude` and /login", arg=str(creds_path))
     return creds
 
 
@@ -113,7 +115,7 @@ def refresh_login(creds_path, creds):
         raise UsageError("expired", "Token expired; open Claude Code to renew it")
     result = request_json(TOKEN_URL, {}, {"grant_type": "refresh_token", "refresh_token": used, "client_id": CLIENT_ID})
     if not isinstance(result, dict) or not result.get("access_token"):
-        raise UsageError("expired", "Token renewal failed; open Claude Code to renew it")
+        raise UsageError("renew_failed", "Token renewal failed; open Claude Code to renew it")
     # Claude Code may have renewed it while we were asking; its file wins then.
     latest = load_login(creds_path)
     if latest["claudeAiOauth"].get("refreshToken") != used:
@@ -201,7 +203,7 @@ def fetch(creds_path, allow_refresh):
         if e.code != "http_401":
             raise
         if not allow_refresh:
-            raise UsageError("expired", "Token rejected; open Claude Code to renew it") from None
+            raise UsageError("rejected", "Token rejected; open Claude Code to renew it") from None
         usage = ask(refresh_login(creds_path, creds)["claudeAiOauth"]["accessToken"])
     if not isinstance(usage, dict):
         raise UsageError("bad_response", "Unexpected usage response")
@@ -239,7 +241,8 @@ def main():
             except (sqlite3.Error, OSError):
                 pass  # the history is a bonus; the widget still shows the limits
         except UsageError as e:
-            out = {"ok": False, "stale": bool(cache.get("data")), "error": str(e), "error_code": e.code}
+            out = {"ok": False, "stale": bool(cache.get("data")), "error": str(e), "error_code": e.code,
+                   "error_arg": e.arg}
             cache["config_dir"] = str(config_dir)
             if e.code == "http_429":
                 cache["backoff_until"] = now() + max(e.retry_after or 0, 300)

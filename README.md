@@ -188,6 +188,17 @@ python3 -I package/contents/code/watch_activity.py --timeout 60
 - **Changes do not show up after an update** — restart Plasma:
   `systemctl --user restart plasma-plasmashell`.
 
+## Translations
+
+The widget follows the Plasma language. Available: English, Ukrainian.
+
+The strings live in `translate/`: `template.pot` and one `<lang>.po` per
+language. After changing strings or a translation, run `translate/build.sh`
+(needs gettext): it re-extracts the strings, merges them into every `.po` and
+compiles them into `package/contents/locale`. To add a language, copy
+`template.pot` to `<lang>.po` (e.g. `msginit -l de -i translate/template.pot
+-o translate/de.po`), translate it and run the script.
+
 ## License
 
 [GPL-2.0-or-later](LICENSE)

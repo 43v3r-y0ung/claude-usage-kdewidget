@@ -1,16 +1,24 @@
 .pragma library
 
+// The English duration templates; the QML side passes translated ones (root.durationUnits).
+const englishUnits = { now: "now", m: "%1m", hm: "%1h %2m", dh: "%1d %2h" };
+
+function fill(template, a, b) {
+    return template.replace("%1", a).replace("%2", b);
+}
+
 // "now", "42m", "2h 13m", "3d 4h"
-function duration(seconds) {
+function duration(seconds, units) {
+    units = units || englishUnits;
     if (seconds < 60)
-        return "now";
+        return units.now;
     const m = Math.floor(seconds / 60);
     if (m < 60)
-        return m + "m";
+        return fill(units.m, m);
     const h = Math.floor(m / 60);
     if (h < 24)
-        return h + "h " + (m % 60) + "m";
-    return Math.floor(h / 24) + "d " + (h % 24) + "h";
+        return fill(units.hm, h, m % 60);
+    return fill(units.dh, Math.floor(h / 24), h % 24);
 }
 
 function secondsUntil(isoString, nowMs) {
@@ -52,14 +60,14 @@ function money(usd) {
 
 // The panel text: percent used and/or the reset time, in one of three styles
 // (0 time left, 1 clock time, 2 both).
-function panelText(percent, resetsAt, nowMs, showPercent, showReset, style) {
+function panelText(percent, resetsAt, nowMs, showPercent, showReset, style, units) {
     let parts = [];
     if (showPercent)
         parts.push(Math.round(percent) + "%");
     const s = secondsUntil(resetsAt, nowMs);
     if (showReset && s > 0) {
         const clock = Qt.locale().toString(new Date(resetsAt), s < 86400 ? "HH:mm" : "ddd HH:mm");
-        parts.push(style === 1 ? clock : style === 2 ? duration(s) + " · " + clock : duration(s));
+        parts.push(style === 1 ? clock : style === 2 ? duration(s, units) + " · " + clock : duration(s, units));
     }
     return parts.join(" · ");
 }

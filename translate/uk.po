@@ -1,0 +1,536 @@
+# Ukrainian translation of the Claude Usage widget.
+# This file is distributed under the same license as the Claude Usage widget.
+# Aeou <mail2spaceboy@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.43v3r-y0ung.claudeusage\n"
+"Report-Msgid-Bugs-To: https://github.com/43v3r-y0ung/claude-usage-kdewidget/"
+"issues\n"
+"POT-Creation-Date: 2026-10-26 08:34+0200\n"
+"PO-Revision-Date: 2026-10-26 12:00+0200\n"
+"Last-Translator: Aeou <mail2spaceboy@gmail.com>\n"
+"Language-Team: Ukrainian\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../package/contents/config/config.qml:6
+msgid "General"
+msgstr "Загальне"
+
+#: ../package/contents/ui/ConfigGeneral.qml:28
+#: ../package/contents/ui/main.qml:20
+msgctxt "@item:intext a duration under a minute"
+msgid "now"
+msgstr "зараз"
+
+#: ../package/contents/ui/ConfigGeneral.qml:29
+#: ../package/contents/ui/main.qml:21
+msgctxt "@item:intext short duration in minutes"
+msgid "%1m"
+msgstr "%1 хв"
+
+#: ../package/contents/ui/ConfigGeneral.qml:30
+#: ../package/contents/ui/main.qml:22
+msgctxt "@item:intext short duration in hours and minutes"
+msgid "%1h %2m"
+msgstr "%1 год %2 хв"
+
+#: ../package/contents/ui/ConfigGeneral.qml:31
+#: ../package/contents/ui/main.qml:23
+msgctxt "@item:intext short duration in days and hours"
+msgid "%1d %2h"
+msgstr "%1 д %2 год"
+
+#: ../package/contents/ui/ConfigGeneral.qml:37
+msgid "Limit shown in panel:"
+msgstr "Ліміт на панелі:"
+
+#: ../package/contents/ui/ConfigGeneral.qml:38
+msgid "Session (5 hours)"
+msgstr "Сесія (5 годин)"
+
+#: ../package/contents/ui/ConfigGeneral.qml:38
+msgid "Weekly (all models)"
+msgstr "Тижневий (усі моделі)"
+
+#: ../package/contents/ui/ConfigGeneral.qml:38
+msgid "Whichever is most used"
+msgstr "Той, що використано найбільше"
+
+#: ../package/contents/ui/ConfigGeneral.qml:39
+msgid "Nested rings: weekly outside, session inside"
+msgstr "Вкладені кільця: тижневий ззовні, сесія всередині"
+
+#: ../package/contents/ui/ConfigGeneral.qml:39
+msgid "Nested rings: session outside, weekly inside"
+msgstr "Вкладені кільця: сесія ззовні, тижневий всередині"
+
+#: ../package/contents/ui/ConfigGeneral.qml:44
+msgid "Panel shows:"
+msgstr "На панелі:"
+
+#: ../package/contents/ui/ConfigGeneral.qml:45
+msgid "Chart"
+msgstr "Діаграма"
+
+#: ../package/contents/ui/ConfigGeneral.qml:50
+msgid "Percentage used"
+msgstr "Використано, %"
+
+#: ../package/contents/ui/ConfigGeneral.qml:56
+msgid "Reset time as"
+msgstr "Час скидання як"
+
+#: ../package/contents/ui/ConfigGeneral.qml:62
+msgid "Time left (1h 2m)"
+msgstr "Залишок часу (1 год 2 хв)"
+
+#: ../package/contents/ui/ConfigGeneral.qml:62
+msgid "Clock time (11:50)"
+msgstr "Час на годиннику (11:50)"
+
+#: ../package/contents/ui/ConfigGeneral.qml:62
+msgid "Both"
+msgstr "Обидва"
+
+#: ../package/contents/ui/ConfigGeneral.qml:68
+msgid "Preview:"
+msgstr "Попередній перегляд:"
+
+#: ../package/contents/ui/ConfigGeneral.qml:96
+msgid "Hide while Claude Code is not running"
+msgstr "Ховати, коли Claude Code не запущено"
+
+#: ../package/contents/ui/ConfigGeneral.qml:103
+msgid "Refresh every:"
+msgstr "Оновлювати кожні:"
+
+#: ../package/contents/ui/ConfigGeneral.qml:106
+msgid "%1 minute"
+msgid_plural "%1 minutes"
+msgstr[0] "%1 хвилину"
+msgstr[1] "%1 хвилини"
+msgstr[2] "%1 хвилин"
+
+#: ../package/contents/ui/ConfigGeneral.qml:111
+msgid "Also update live while Claude Code works"
+msgstr "Також оновлювати наживо, поки Claude Code працює"
+
+#: ../package/contents/ui/ConfigGeneral.qml:118
+msgid ""
+"Watches Claude Code's files on this computer: token counts update after "
+"every step of a response, and the limits are fetched again when a response "
+"ends (at most once a minute)."
+msgstr "Стежить за файлами Claude Code на цьому комп’ютері: кількість токенів оновлюється після кожного кроку відповіді, а ліміти завантажуються знову, коли відповідь завершується (не частіше ніж раз на хвилину)."
+
+#: ../package/contents/ui/ConfigGeneral.qml:122
+msgid "Warning at:"
+msgstr "Попередження від:"
+
+#: ../package/contents/ui/ConfigGeneral.qml:130
+msgid "Critical at:"
+msgstr "Критично від:"
+
+#: ../package/contents/ui/ConfigGeneral.qml:141
+msgid "Claude config directory:"
+msgstr "Каталог налаштувань Claude:"
+
+#: ../package/contents/ui/ConfigGeneral.qml:146
+msgid "Renew an expired login token"
+msgstr "Поновлювати прострочений токен входу"
+
+#: ../package/contents/ui/ConfigGeneral.qml:153
+msgid ""
+"Off: when Claude Code has not been used for a while and its token expires, "
+"the widget keeps showing the last data until Claude Code renews it. On: the "
+"widget renews the token itself and writes the new one back to Claude Code's "
+"credentials file."
+msgstr "Вимкнено: коли Claude Code довго не використовували і його токен прострочився, віджет показує останні дані, доки Claude Code не поновить токен. Увімкнено: віджет сам поновлює токен і записує новий у файл облікових даних Claude Code."
+
+#: ../package/contents/ui/FullRepresentation.qml:44
+#: ../package/contents/ui/main.qml:380
+msgid "Claude usage"
+msgstr "Використання Claude"
+
+#: ../package/contents/ui/FullRepresentation.qml:55
+msgid "Refresh now"
+msgstr "Оновити зараз"
+
+#: ../package/contents/ui/FullRepresentation.qml:77
+msgid "Limits"
+msgstr "Ліміти"
+
+#: ../package/contents/ui/FullRepresentation.qml:83
+msgid "No usage data"
+msgstr "Немає даних про використання"
+
+#: ../package/contents/ui/FullRepresentation.qml:83
+#: ../package/contents/ui/main.qml:383
+msgid "Loading…"
+msgstr "Завантаження…"
+
+#: ../package/contents/ui/FullRepresentation.qml:106
+#: ../package/contents/ui/SessionHistory.qml:182
+#, javascript-format
+msgid "%1% used"
+msgstr "Використано %1%"
+
+#: ../package/contents/ui/FullRepresentation.qml:128
+msgid "%1 tokens · ≈ %2"
+msgstr "%1 токенів · ≈ %2"
+
+#: ../package/contents/ui/FullRepresentation.qml:135
+msgid ""
+"Used by Claude Code on this computer in this session. The cost is an "
+"estimate at Claude API prices."
+msgstr "Використано Claude Code на цьому комп’ютері в цій сесії. Вартість — це оцінка за цінами Claude API."
+
+#: ../package/contents/ui/FullRepresentation.qml:146
+msgid "Extra usage"
+msgstr "Додаткове використання"
+
+#: ../package/contents/ui/FullRepresentation.qml:149
+#, javascript-format
+msgid "%1% of monthly limit"
+msgstr "%1% місячного ліміту"
+
+#: ../package/contents/ui/FullRepresentation.qml:155
+msgid "Tokens · Claude Code on this computer"
+msgstr "Токени · Claude Code на цьому комп’ютері"
+
+#: ../package/contents/ui/FullRepresentation.qml:175
+msgid "Updated just now"
+msgstr "Оновлено щойно"
+
+#: ../package/contents/ui/FullRepresentation.qml:175
+msgid "Updated %1 ago"
+msgstr "Оновлено %1 тому"
+
+#: ../package/contents/ui/main.qml:51
+msgid "Reset, refreshing…"
+msgstr "Скинуто, оновлення…"
+
+#: ../package/contents/ui/main.qml:53
+msgid "Resets in %1 (%2)"
+msgstr "Скинеться через %1 (%2)"
+
+#: ../package/contents/ui/main.qml:59
+msgid "Session (5h)"
+msgstr "Сесія (5 год)"
+
+#: ../package/contents/ui/main.qml:60
+msgid "Weekly · all models"
+msgstr "Тижневий · усі моделі"
+
+#: ../package/contents/ui/main.qml:63
+msgid "Weekly · scoped"
+msgstr "Тижневий · окремі моделі"
+
+#: ../package/contents/ui/main.qml:63
+msgid "Weekly · %1"
+msgstr "Тижневий · %1"
+
+#: ../package/contents/ui/main.qml:71
+msgid "No Claude Code login in %1; run `claude` and /login"
+msgstr "Немає входу Claude Code у %1; запустіть `claude` і виконайте /login"
+
+#: ../package/contents/ui/main.qml:72
+msgid "Token expired; open Claude Code to renew it"
+msgstr "Токен прострочено; відкрийте Claude Code, щоб поновити його"
+
+#: ../package/contents/ui/main.qml:73
+msgid "Token renewal failed; open Claude Code to renew it"
+msgstr "Не вдалося поновити токен; відкрийте Claude Code, щоб поновити його"
+
+#: ../package/contents/ui/main.qml:74
+msgid "Token rejected; open Claude Code to renew it"
+msgstr "Токен відхилено; відкрийте Claude Code, щоб поновити його"
+
+#: ../package/contents/ui/main.qml:75
+msgid "Network error: %1"
+msgstr "Помилка мережі: %1"
+
+#: ../package/contents/ui/main.qml:76
+msgid "Unexpected answer from the server"
+msgstr "Неочікувана відповідь сервера"
+
+#: ../package/contents/ui/main.qml:77
+msgid "Rate limited; waiting before asking again"
+msgstr "Забагато запитів; очікування перед наступною спробою"
+
+#: ../package/contents/ui/main.qml:80
+msgid "HTTP %1 from %2"
+msgstr "HTTP %1 від %2"
+
+#: ../package/contents/ui/main.qml:163
+msgid "Token history helper failed"
+msgstr "Помилка допоміжного скрипта історії токенів"
+
+#: ../package/contents/ui/main.qml:305
+msgid "Helper script failed: %1"
+msgstr "Помилка допоміжного скрипта: %1"
+
+#: ../package/contents/ui/main.qml:384
+msgid "%1: %2% · %3"
+msgstr "%1: %2% · %3"
+
+#: ../package/contents/ui/main.qml:387
+msgid "Claude Code is working in 1 session"
+msgid_plural "Claude Code is working in %1 sessions"
+msgstr[0] "Claude Code працює в %1 сесії"
+msgstr[1] "Claude Code працює в %1 сесіях"
+msgstr[2] "Claude Code працює в %1 сесіях"
+
+#: ../package/contents/ui/main.qml:398
+msgid "Refresh Now"
+msgstr "Оновити зараз"
+
+#: ../package/contents/ui/ModelRow.qml:109
+#: ../package/contents/ui/TokenSection.qml:189
+msgid "Input"
+msgstr "Вхід"
+
+#: ../package/contents/ui/ModelRow.qml:110
+#: ../package/contents/ui/TokenSection.qml:190
+msgid "Output"
+msgstr "Вихід"
+
+#: ../package/contents/ui/ModelRow.qml:111
+#: ../package/contents/ui/TokenSection.qml:191
+msgid "Cache write"
+msgstr "Запис у кеш"
+
+#: ../package/contents/ui/ModelRow.qml:112
+#: ../package/contents/ui/TokenSection.qml:192
+msgid "Cache read"
+msgstr "Читання кешу"
+
+#: ../package/contents/ui/ModelRow.qml:113
+msgid "Requests"
+msgstr "Запити"
+
+#: ../package/contents/ui/ModelRow.qml:114
+msgid "Cost"
+msgstr "Вартість"
+
+#: ../package/contents/ui/ModelRow.qml:114
+msgid "unknown price"
+msgstr "ціна невідома"
+
+#: ../package/contents/ui/SessionHistory.qml:96
+#: ../package/contents/ui/TokenChart.qml:221
+msgid "%1 tokens"
+msgstr "%1 токенів"
+
+#: ../package/contents/ui/SessionHistory.qml:98
+msgid "limit reached"
+msgstr "ліміт досягнуто"
+
+#: ../package/contents/ui/SessionHistory.qml:101
+msgid "%2 of the last %1 session hit the limit"
+msgid_plural "%2 of the last %1 sessions hit the limit"
+msgstr[0] "Ліміт досягнуто в %2 з останньої %1 сесії"
+msgstr[1] "Ліміт досягнуто в %2 з останніх %1 сесій"
+msgstr[2] "Ліміт досягнуто в %2 з останніх %1 сесій"
+
+#: ../package/contents/ui/SessionHistory.qml:112
+msgid "Limit reached"
+msgstr "Ліміт досягнуто"
+
+#: ../package/contents/ui/SessionHistory.qml:159
+msgid "Limit reached at %1"
+msgstr "Ліміт досягнуто о %1"
+
+#: ../package/contents/ui/SessionHistory.qml:161
+msgid "In progress"
+msgstr "Триває"
+
+#: ../package/contents/ui/SessionHistory.qml:162
+msgid "Limit not reached"
+msgstr "Ліміт не досягнуто"
+
+#: ../package/contents/ui/SessionHistory.qml:176
+msgid "after %1 of the session"
+msgstr "через %1 від початку сесії"
+
+#: ../package/contents/ui/SessionHistory.qml:177
+#: ../package/contents/ui/SessionHistory.qml:183
+msgid "resets in %1"
+msgstr "скинеться через %1"
+
+#: ../package/contents/ui/SessionHistory.qml:178
+msgid "blocked for %1"
+msgstr "заблоковано на %1"
+
+#: ../package/contents/ui/SessionHistory.qml:185
+#, javascript-format
+msgid "peaked at %1% of the limit"
+msgstr "максимум — %1% ліміту"
+
+#: ../package/contents/ui/SessionHistory.qml:187
+msgid "no limit errors were logged"
+msgstr "помилок ліміту не зафіксовано"
+
+#: ../package/contents/ui/SessionHistory.qml:190
+msgid "times estimated from this computer's activity"
+msgstr "час оцінено за активністю на цьому комп’ютері"
+
+#: ../package/contents/ui/TokenChart.qml:80
+msgid "Peak %1"
+msgstr "Пік %1"
+
+#: ../package/contents/ui/TokenChart.qml:124
+msgid "Limit hit %1"
+msgstr "Ліміт о %1"
+
+#: ../package/contents/ui/TokenChart.qml:245
+msgid "+%1 more"
+msgstr "ще %1"
+
+#: ../package/contents/ui/TokenSection.qml:31
+msgid "Current session"
+msgstr "Поточна сесія"
+
+#: ../package/contents/ui/TokenSection.qml:33
+msgid "Today"
+msgstr "Сьогодні"
+
+#: ../package/contents/ui/TokenSection.qml:33
+msgid "Yesterday"
+msgstr "Учора"
+
+#: ../package/contents/ui/TokenSection.qml:34
+msgid "This week"
+msgstr "Цей тиждень"
+
+#: ../package/contents/ui/TokenSection.qml:34
+msgid "Last week"
+msgstr "Минулий тиждень"
+
+#: ../package/contents/ui/TokenSection.qml:34
+msgid "%1 week ago"
+msgid_plural "%1 weeks ago"
+msgstr[0] "%1 тиждень тому"
+msgstr[1] "%1 тижні тому"
+msgstr[2] "%1 тижнів тому"
+
+#: ../package/contents/ui/TokenSection.qml:35
+msgid "This month"
+msgstr "Цей місяць"
+
+#: ../package/contents/ui/TokenSection.qml:35
+msgid "Last month"
+msgstr "Минулий місяць"
+
+#: ../package/contents/ui/TokenSection.qml:36
+msgid "This year"
+msgstr "Цей рік"
+
+#: ../package/contents/ui/TokenSection.qml:36
+msgid "Last year"
+msgstr "Минулий рік"
+
+#: ../package/contents/ui/TokenSection.qml:46
+msgid "(estimated)"
+msgstr "(оцінка)"
+
+#: ../package/contents/ui/TokenSection.qml:60
+msgid "vs this point last session"
+msgstr "проти минулої сесії"
+
+#: ../package/contents/ui/TokenSection.qml:60
+msgid "vs this time yesterday"
+msgstr "проти вчора"
+
+#: ../package/contents/ui/TokenSection.qml:61
+msgid "vs this point last week"
+msgstr "проти минулого тижня"
+
+#: ../package/contents/ui/TokenSection.qml:61
+msgid "vs this point last month"
+msgstr "проти минулого місяця"
+
+#: ../package/contents/ui/TokenSection.qml:62
+msgid "vs this point last year"
+msgstr "проти минулого року"
+
+#: ../package/contents/ui/TokenSection.qml:64
+msgid "vs the session before"
+msgstr "проти попередньої сесії"
+
+#: ../package/contents/ui/TokenSection.qml:64
+msgid "vs the day before"
+msgstr "проти попереднього дня"
+
+#: ../package/contents/ui/TokenSection.qml:65
+msgid "vs the week before"
+msgstr "проти попереднього тижня"
+
+#: ../package/contents/ui/TokenSection.qml:65
+msgid "vs the month before"
+msgstr "проти попереднього місяця"
+
+#: ../package/contents/ui/TokenSection.qml:66
+msgid "vs the year before"
+msgstr "проти попереднього року"
+
+#: ../package/contents/ui/TokenSection.qml:77
+msgid "Session"
+msgstr "Сесія"
+
+#: ../package/contents/ui/TokenSection.qml:77
+msgid "Day"
+msgstr "День"
+
+#: ../package/contents/ui/TokenSection.qml:77
+msgid "Week"
+msgstr "Тиждень"
+
+#: ../package/contents/ui/TokenSection.qml:77
+msgid "Month"
+msgstr "Місяць"
+
+#: ../package/contents/ui/TokenSection.qml:77
+msgid "Year"
+msgstr "Рік"
+
+#: ../package/contents/ui/TokenSection.qml:95
+msgid "Earlier"
+msgstr "Раніше"
+
+#: ../package/contents/ui/TokenSection.qml:120
+msgid "Later"
+msgstr "Пізніше"
+
+#: ../package/contents/ui/TokenSection.qml:120
+msgid "Back to now"
+msgstr "Повернутися до поточного"
+
+#: ../package/contents/ui/TokenSection.qml:154
+msgid "tokens"
+msgstr "токенів"
+
+#: ../package/contents/ui/TokenSection.qml:166
+msgid "Leaves out models without a known price."
+msgstr "Не враховує моделі з невідомою ціною."
+
+#: ../package/contents/ui/TokenSection.qml:167
+msgid ""
+"What these tokens would cost at Claude API prices, as Claude Code's /cost "
+"estimates it. A subscription is not billed per token, and a few background "
+"requests Claude Code makes are not in its transcripts, so this runs a little "
+"lower than /cost."
+msgstr "Скільки коштували б ці токени за цінами Claude API — так, як це оцінює /cost у Claude Code. Підписка не оплачується за токени, а кілька фонових запитів Claude Code не потрапляють до його журналів, тож ця сума трохи нижча, ніж у /cost."
+
+#: ../package/contents/ui/TokenSection.qml:265
+msgid "No Claude Code activity"
+msgstr "Немає активності Claude Code"
+
+#: ../package/contents/ui/TokenSection.qml:267
+msgid "History starts on %1"
+
+msgstr "Історія починається з %1"

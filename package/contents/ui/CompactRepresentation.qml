@@ -19,7 +19,7 @@ MouseArea {
     readonly property string text: {
         if (!limit)
             return root.usage && root.usage.error ? "!" : showChart ? "" : "…";
-        return Format.panelText(percent, limit.resets_at, root.now, cfg.showPercent, cfg.showResetTime, cfg.resetTimeStyle);
+        return Format.panelText(percent, limit.resets_at, root.now, cfg.showPercent, cfg.showResetTime, cfg.resetTimeStyle, root.durationUnits);
     }
 
     visible: !root.hidden
